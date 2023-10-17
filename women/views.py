@@ -29,7 +29,7 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'women/about.html', {'title': 'О сайте'})
+    return render(request, 'women/about.html', {'title': 'О сайте', 'menu': menu})
 
 
 def addpage(request):

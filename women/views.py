@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 
-from .models import Women
+from .models import Women, Category
 
 # Create your views here.
 
@@ -18,12 +18,6 @@ data_db = [
     {'id': 1, 'title': 'Анджелина Джоли', 'content': 'Боиграфия Анджелины Джоли', 'is_published': True},
     {'id': 2, 'title': 'Марго Робби', 'content': 'Боиграфия Марго Робби', 'is_published': False},
     {'id': 3, 'title': 'Джулия Роберт', 'content': 'Боиграфия Джулии Робертс', 'is_published': True},
-]
-
-cats_db = [
-    {'id': 1, 'name': 'Актрисы'},
-    {'id': 2, 'name': 'Певицы'},
-    {'id': 3, 'name': 'Спортсменки'},
 ]
 
 
@@ -65,12 +59,14 @@ def show_post(request, post_slug):
     return render(request, 'women/post.html', data)
 
 
-def show_category(request, cat_id):
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    posts = Women.published.filter(cat_id=category.pk)
     data = {
-        'title': 'Отображение по рубрикам',
+        'title': f'Рубрика {category.name}',
         'menu': menu,
-        'posts': data_db,
-        'cat_selected': cat_id,
+        'posts': posts,
+        'cat_selected': category.pk,
     }
     return render(request, 'women/index.html', context=data)
 

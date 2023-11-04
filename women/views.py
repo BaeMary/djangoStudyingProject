@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost, UploadFiles
@@ -90,18 +90,27 @@ def about(request):
 #     return render(request, 'women/addpage.html', data)
 
 
-class AddPage(FormView):
+class AddPage(CreateView):
     form_class = AddPostForm
+    # model = Women
+    # fields = ['title', 'slug', 'content', 'is_published']
     template_name = 'women/addpage.html'
-    success_url = reverse_lazy('home')
+    # success_url = reverse_lazy('home')
     extra_context = {
         'title': 'Добавление статьи',
         'menu': menu,
     }
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+
+class UpdatePage(UpdateView):
+    model = Women
+    fields = ['title', 'content', 'photo', 'is_published', 'cat']
+    template_name = 'women/addpage.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'title': 'Редактирование статьи',
+        'menu': menu,
+    }
 
 
 # class AddPage(View):
